@@ -25,10 +25,10 @@ class DialogBox extends StatelessWidget {
               controller: controller,
               decoration: InputDecoration(
                 hintText: "Task Name",
-                hintStyle: GoogleFonts.roboto(color: Colors.grey[200]),
+                hintStyle: GoogleFonts.roboto(color: Colors.blue[200]),
                 border: const OutlineInputBorder(),
               ),
-              style: GoogleFonts.roboto(color: Colors.white),
+              style: GoogleFonts.roboto(color: Colors.blue),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

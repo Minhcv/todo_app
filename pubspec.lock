@@ -267,6 +267,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.4"
+  reorderables:
+    dependency: "direct main"
+    description:
+      name: reorderables
+      sha256: "2839d12660ca7cbfcc952d884e2e1930b949b4640b9293a85b42317637d32c92"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.2"
   sky_engine:
     dependency: transitive
     description: flutter

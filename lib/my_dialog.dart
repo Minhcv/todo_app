@@ -4,6 +4,7 @@ class MyCustomDialog extends StatefulWidget {
   const MyCustomDialog({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MyCustomDialogState createState() => _MyCustomDialogState();
 }
 
@@ -19,7 +20,7 @@ class _MyCustomDialogState extends State<MyCustomDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Đây là tiêu đề'),
+      title: const Text('Nhập task mới'),
       content: TextFormField(
         controller: _textEditingController,
         decoration: const InputDecoration(

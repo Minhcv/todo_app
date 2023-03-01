@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-
-import 'db/database.dart';
+import 'package:todo_app/todo.dart';
 import 'dialog_box.dart';
 import 'todo_tile.dart';
 
@@ -15,29 +12,38 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   //refrence hive box
-  final _box = Hive.box("todoBox");
-  final TodoDatabase _db = TodoDatabase();
   final TextEditingController _controller = TextEditingController();
+
+  bool isDarkMode = false;
+
+  List<Todo> todoList = [
+    Todo('Làm bài tập Flutter', false),
+    Todo('Học tiếng Nhật', false),
+  ];
 
   void checkBoxChange({required bool? value, required int index}) {
     setState(() {
-      _db.todoList[index][1] = !_db.todoList[index][1];
+      todoList[index].completed = !todoList[index].completed;
     });
-    _db.updateDatabase();
+  }
+
+  void toggleTheme() {
+    setState(() {
+      isDarkMode = !isDarkMode;
+    });
   }
 
   void saveNewTask() {
     {
       setState(() {
-        _db.todoList.add([
+        todoList.add(Todo(
           _controller.text,
           false,
-        ]);
+        ));
         _controller.clear();
         Navigator.of(context).pop();
       });
     }
-    _db.updateDatabase();
   }
 
   void cancelNewTask() {
@@ -60,54 +66,47 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void deleteTask(int index) {
     setState(() {
-      _db.todoList.removeAt(index);
+      todoList.removeAt(index);
     });
-    _db.updateDatabase();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    // if this is the 1st time run this app , we need to create initial data
-    if (_box.get("TODOLIST") == null) {
-      _db.createInitialData();
-    } else {
-      _db.loadData();
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // backgroundColor: Colors.purple[200],
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            "To Do List",
-            style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      darkTheme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      home: Scaffold(
+        // backgroundColor: Colors.purple[200],
+        appBar: AppBar(
+          title: Center(
+            child: IconButton(
+              iconSize: 72,
+              icon: const Icon(Icons.brightness_6),
+              onPressed: toggleTheme,
+            ),
           ),
+          elevation: 0,
         ),
-        elevation: 0,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: addNewTask,
-        child: const Icon(Icons.add),
-      ),
-      body: ListView.builder(
-        itemCount: _db.todoList.length,
-        itemBuilder: (context, index) {
-          return ToDoTile(
-            taskName: _db.todoList[index][0],
-            isComplated: _db.todoList[index][1],
-            onChange: (value) {
-              checkBoxChange(index: index, value: value);
-            },
-            deleteFunction: (ctx) {
-              deleteTask(index);
-            },
-          );
-        },
+        floatingActionButton: FloatingActionButton(
+          onPressed: addNewTask,
+          child: const Icon(Icons.add),
+        ),
+        body: ListView.builder(
+          itemCount: todoList.length,
+          itemBuilder: (context, index) {
+            return ToDoTile(
+              taskName: todoList[index].title,
+              isComplated: todoList[index].completed,
+              onChange: (value) {
+                checkBoxChange(index: index, value: value);
+              },
+              deleteFunction: (ctx) {
+                deleteTask(index);
+              },
+            );
+          },
+        ),
       ),
     );
   }
